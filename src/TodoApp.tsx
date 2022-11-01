@@ -67,6 +67,9 @@ function TodoApp() {
        * onCompleted seems to be triggered multiple times, whereas I would expect it to only
        * trigger when the query is actually performed. Using the `skip` option on the query
        * and additional state, we can force the behavior that it will only be executed once.
+       *
+       * This seems to be a known issue, addressed in the upcoming 3.8 release with this PR:
+       * https://github.com/apollographql/apollo-client/pull/10229
        */
       setSkipQuery(true);
       setTodos(data.todo);
