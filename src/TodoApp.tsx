@@ -50,6 +50,7 @@ interface Todo {
 function TodoApp() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [title, setTitle] = useState('');
+  const [skipQuery, setSkipQuery] = useState(false);
   const [addTodo] = useMutation(ADD_TODO, { onCompleted: (data) => {
     setTodos([...todos, data.insert_todo_one]);
   } });
@@ -60,9 +61,18 @@ function TodoApp() {
       setTodos(todos);
     }
   } });
-  const { loading } = useQuery(GET_TODOS, { onCompleted: (data) => {
-    setTodos(data.todo);
-  } });
+  const { loading } = useQuery(GET_TODOS, {
+    onCompleted: (data) => {
+      /**
+       * onCompleted seems to be triggered multiple times, whereas I would expect it to only
+       * trigger when the query is actually performed. Using the `skip` option on the query
+       * and additional state, we can force the behavior that it will only be executed once.
+       */
+      setSkipQuery(true);
+      setTodos(data.todo);
+    },
+    skip: skipQuery
+  });
   useSubscription(
     TODOS_SUBSCRIPTION,
     { onData: ({ data }) => setTodos(data.data.todo) }
