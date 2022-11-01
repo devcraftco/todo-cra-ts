@@ -65,7 +65,7 @@ function TodoApp() {
   } });
   useSubscription(
     TODOS_SUBSCRIPTION,
-    { onData: ({ data }) => {console.log(data.data.todo); setTodos(data.data.todo);} }
+    { onData: ({ data }) => setTodos(data.data.todo) }
   );
 
   return (
